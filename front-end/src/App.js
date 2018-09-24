@@ -15,11 +15,15 @@ class App extends Component {
 	}
 
 	onSkipPressed = () => {
-		console.log('Skip pressed')
+		fetch("http://192.168.2.14:8000/skip")
 	}
 
 	onPlayPressed = () => {
-		console.log(this.state.songUrl)
+		fetch(`http://192.168.2.14:8000/play?url=${this.state.songUrl}`, {
+			method: 'post'
+		})
+
+		document.getElementById('search-box').value = '';
 	}
 
 	onStopPressed = () => {
@@ -37,7 +41,7 @@ class App extends Component {
 			<div className="App">
 				<div className="pt3 measure center">
 					<div className="ma2">
-						<input type="text" name="songUrl" onChange={this.onUrlChanged} />
+						<input id="search-box" type="text" name="songUrl" onChange={this.onUrlChanged} />
 						<button id="search" onClick={this.performSearch} className="mt1 ml2"> Search </button>
 					</div>
 					<div className="mt2 pl2 pr2">
