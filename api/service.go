@@ -3,22 +3,22 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"google.golang.org/api/googleapi/transport"
-	"google.golang.org/api/youtube/v3"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os/exec"
+
+	"google.golang.org/api/googleapi/transport"
+	"google.golang.org/api/youtube/v3"
 )
 
-type Queue []string
-
+// Service struct provides all services required by the server
 type Service struct {
-	queue    Queue
-	playChan chan string
-	cmd      *exec.Cmd
+	queue      Queue
+	playChan   chan string
+	cmd        *exec.Cmd
 	maxResults int64
-	client *youtube.Service
+	client     *youtube.Service
 }
 
 // initService initializes the basic requirements of the server
@@ -44,11 +44,11 @@ func initService() Service {
 	}
 
 	return Service{
-		queue: Queue{},
-		playChan: make(chan string),
-		cmd: nil,
+		queue:      Queue{},
+		playChan:   make(chan string),
+		cmd:        nil,
 		maxResults: maxResults,
-		client: youtubeService,
+		client:     youtubeService,
 	}
 
 }
@@ -56,18 +56,18 @@ func initService() Service {
 // QueueSong adds url of song to queue
 func (s *Service) QueueSong(w http.ResponseWriter, r *http.Request) {
 	url := r.URL.Query().Get("url")
+	s.queue.push(url)
 
-	s.queue = append(s.queue, url)
 	select {
 	case s.playChan <- "Play":
-		fmt.Println("song sent to channel")
+		fmt.Println("Song send for playing")
 	default:
-		fmt.Println("song already playing")
+		fmt.Println("Sent to queue")
 	}
 }
 
 // SkipSong skips the currently playing song
-func (s Service) SkipSong(w http.ResponseWriter, r *http.Request) {
+func (s *Service) SkipSong(w http.ResponseWriter, r *http.Request) {
 	s.cmd.Process.Kill()
 }
 
@@ -90,14 +90,14 @@ func (s Service) SearchSong(w http.ResponseWriter, r *http.Request) {
 }
 
 // PlaySong plays song in queue
-func (s Service) PlaySong() {
+func (s *Service) PlaySong() {
 	for {
 		select {
 		case <-s.playChan:
 			for len(s.queue) > 0 {
 				s.cmd = exec.Command("mpv", "--no-terminal", "--no-video", s.queue[0])
 				s.cmd.Run()
-				s.queue = s.queue[1:]
+				s.queue.pop()
 			}
 		}
 	}

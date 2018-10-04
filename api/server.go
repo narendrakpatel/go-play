@@ -1,9 +1,10 @@
 package main
 
 import (
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 func main() {
@@ -17,5 +18,5 @@ func main() {
 
 	go service.PlaySong()
 
-	log.Fatal(http.ListenAndServe(":1234", router))
+	log.Fatal(http.ListenAndServe(":8000", router))
 }
