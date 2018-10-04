@@ -3,15 +3,18 @@ package main
 import (
 	"log"
 	"net/http"
-
-	"google.golang.org/api/googleapi/transport"
-	youtube "google.golang.org/api/youtube/v3"
 )
 
+// Res struct for response
+type Res struct {
+	ID  string `json:"id"`
+	URL string `json:"url"`
+}
+
 func (s Service) getIDs(q string) []Res {
-	call := service.Search.List("id,snippet").
+	call := s.client.Search.List("id,snippet").
 		Q(q).
-		MaxResults(maxResults)
+		MaxResults(s.maxResults)
 	response, err := call.Do()
 
 	if err != nil {
@@ -27,10 +30,10 @@ func (s Service) getIDs(q string) []Res {
 		}
 	}
 
-	return s.parseIDs(videos)
+	return parseIDs(videos)
 }
 
-func (s Service) parseIDs(matches map[string]string) []Res {
+func parseIDs(matches map[string]string) []Res {
 	var res []Res
 	for id := range matches {
 		res = append(res, Res{ID: id, URL: getURL(id)})
