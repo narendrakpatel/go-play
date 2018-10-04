@@ -4,7 +4,7 @@ import Song from '../Song/Song';
 const SongQueue = ({searchResults}) => {
     return (
         searchResults.map((item, id) => {
-            return <Song key={id} name={item.name} email={item.email}/>
+            return <Song key={id} title={item.title} url={item.url} thumb={item.thumb} />
         })
     )
 }

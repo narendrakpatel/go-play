@@ -3,6 +3,9 @@ import './App.css';
 import 'tachyons';
 import SongQueue from './components/SongQueue/SongQueue';
 
+const serverUrl = '10.42.0.1';
+const port = '8000';
+
 class App extends Component {
 	constructor() {
 		super()
@@ -13,7 +16,7 @@ class App extends Component {
 	}
 
 	async performSearch() {
-		let data = await fetch('http://192.168.2.14:1100')
+		let data = await fetch(`http://${serverUrl}:${port}/search?query=${this.state.songUrl}`)
 			.then(res => res.json())
 		this.setState({
 			searchResults: data
@@ -21,12 +24,15 @@ class App extends Component {
 	}
 
 	onSkipPressed = () => {
-		fetch("http://192.168.2.14:8000/skip")
+		fetch(`http://${serverUrl}:${port}/skip`)
 	}
 
 	onPlayPressed = () => {
-		fetch(`http://192.168.2.14:8000/play?url=${this.state.songUrl}`, {
+		fetch(`http://${serverUrl}:${port}/play?url=${this.state.songUrl}`, {
 			method: 'post'
+		})
+		this.setState({
+			songUrl: ''
 		})
 
 		document.getElementById('search-box').value = '';
@@ -52,11 +58,11 @@ class App extends Component {
 					</div>
 					<div className="mt2 pl2 pr2">
 						<button id="skip" onClick={this.onSkipPressed} className="mr3 ml3"> skip </button>
-						<button id="play" onClick={this.onPlayPressed} className="mr3 ml3"> play </button>
-						<button id="stop" onClick={this.onStopPressed} className="mr3 ml3"> stop </button>
+						<button id="add" onClick={this.onPlayPressed} className="mr3 ml3"> + </button>
+						<button id="pause" onClick={this.onStopPressed} className="mr3 ml3"> pause </button>
 					</div>
 				</div>
-				<div>
+				<div className='mt3'>
 					<SongQueue searchResults={this.state.searchResults} />
 				</div>
 			</div>
