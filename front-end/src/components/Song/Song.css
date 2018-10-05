@@ -1,0 +1,12 @@
+.dimention {
+    width: 250px;
+    height: 150px;
+}
+
+.label {
+    max-width: 250px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    float: left;
+    white-space: nowrap;
+}

@@ -19,8 +19,11 @@ class App extends Component {
 		let data = await fetch(`http://${serverUrl}:${port}/search?query=${this.state.songUrl}`)
 			.then(res => res.json())
 		this.setState({
+			songUrl: '',
 			searchResults: data
 		})
+
+		document.getElementById('search-box').value = '';
 	}
 
 	onSkipPressed = () => {
@@ -63,7 +66,14 @@ class App extends Component {
 					</div>
 				</div>
 				<div className='mt3'>
-					<SongQueue searchResults={this.state.searchResults} />
+					{
+						this.state.searchResults.length === 1 ?
+							null : (
+								<SongQueue
+									searchResults={this.state.searchResults}
+									className='flex' />
+							)
+					}
 				</div>
 			</div>
 		);
