@@ -3,7 +3,7 @@ import './App.css';
 import 'tachyons';
 import SongQueue from './components/SongQueue/SongQueue';
 
-const serverUrl = '10.42.0.1';
+const serverUrl = '192.168.2.14';
 const port = '8000';
 
 class App extends Component {
@@ -51,6 +51,13 @@ class App extends Component {
 		})
 	}
 
+	onSongClicked = (obj) => {
+		this.setState({
+			songUrl: obj.url,
+			searchResults: [{}]
+		}, () => this.onPlayPressed())
+	}
+
 	render() {
 		return (
 			<div className="App">
@@ -71,7 +78,8 @@ class App extends Component {
 							null : (
 								<SongQueue
 									searchResults={this.state.searchResults}
-									className='flex' />
+									className='flex'
+									onSongClicked={this.onSongClicked} />
 							)
 					}
 				</div>
