@@ -55,6 +55,7 @@ func initService() Service {
 
 // QueueSong adds url of song to queue
 func (s *Service) QueueSong(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	url := r.URL.Query().Get("url")
 	s.queue.push(url)
 
@@ -68,6 +69,7 @@ func (s *Service) QueueSong(w http.ResponseWriter, r *http.Request) {
 
 // SkipSong skips the currently playing song
 func (s *Service) SkipSong(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	s.cmd.Process.Kill()
 }
 
