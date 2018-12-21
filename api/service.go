@@ -104,3 +104,7 @@ func (s *Service) PlaySong() {
 		}
 	}
 }
+
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+}

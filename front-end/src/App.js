@@ -3,12 +3,12 @@ import './App.css';
 import 'tachyons';
 import SongQueue from './components/SongQueue/SongQueue';
 
-const serverUrl = '192.168.2.14';
+const serverUrl = 'localhost';
 const port = '8000';
 
 class App extends Component {
-	constructor() {
-		super()
+	constructor(props) {
+		super(props);
 		this.state = {
 			songUrl: '',
 			searchResults: [{}]
@@ -17,46 +17,46 @@ class App extends Component {
 
 	async performSearch() {
 		let data = await fetch(`http://${serverUrl}:${port}/search?query=${this.state.songUrl}`)
-			.then(res => res.json())
+			.then(res => res.json());
 		this.setState({
 			songUrl: '',
 			searchResults: data
-		})
+		});
 
 		document.getElementById('search-box').value = '';
 	}
 
 	onSkipPressed = () => {
-		fetch(`http://${serverUrl}:${port}/skip`)
-	}
+		fetch(`http://${serverUrl}:${port}/skip`);
+	};
 
 	onPlayPressed = () => {
 		fetch(`http://${serverUrl}:${port}/play?url=${this.state.songUrl}`, {
 			method: 'post'
-		})
+		});
 		this.setState({
 			songUrl: ''
-		})
+		});
 
 		document.getElementById('search-box').value = '';
-	}
+	};
 
 	onStopPressed = () => {
 		console.log('Stop pressed')
-	}
+	};
 
 	onUrlChanged = (event) => {
 		this.setState({
 			songUrl: event.target.value
 		})
-	}
+	};
 
 	onSongClicked = (obj) => {
 		this.setState({
 			songUrl: obj.url,
 			searchResults: [{}]
 		}, () => this.onPlayPressed())
-	}
+	};
 
 	render() {
 		return (

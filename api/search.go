@@ -1,10 +1,8 @@
 package main
 
 import (
-	"log"
-	"net/http"
-
 	"google.golang.org/api/youtube/v3"
+	"log"
 )
 
 // Res struct for response
@@ -39,15 +37,10 @@ func (s Service) getIDs(q string) []Res {
 func parseIDs(matches map[string]*youtube.SearchResultSnippet) []Res {
 	var res []Res
 	for id, snippet := range matches {
-		res = append(res, Res{Title: snippet.Title, URL: getURL(id), Thumbnail: snippet.Thumbnails.High.Url})
+		res = append(res, Res{Title: snippet.Title,
+			URL: "https://www.youtube.com/watch?v=" + id,
+			Thumbnail: snippet.Thumbnails.High.Url},
+			)
 	}
 	return res
-}
-
-func getURL(id string) string {
-	return "https://www.youtube.com/watch?v=" + id
-}
-
-func enableCors(w *http.ResponseWriter) {
-	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 }
